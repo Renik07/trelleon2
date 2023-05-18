@@ -1,0 +1,67 @@
+.modal {
+  z-index: 100;
+}
+
+.modal-content {
+  padding: 30px 25px;
+  font-family: "Manrope";
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 17px;
+}
+
+.modal-label {
+  display: block;
+}
+
+.modal-date {
+  padding-top: 2px;
+}
+
+.modal-author {
+  padding-top: 2px;
+}
+
+.modal-desc {
+  max-width: 1000px;
+}
+
+.modal-link {
+  right: 22px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin-left: auto;
+}
+
+.modal-close {
+  z-index: 500;
+}
+
+/* modal */
+.react-responsive-modal-modal {
+  max-width: 900px !important;
+  width: 100%;
+  background: rgba(139, 0, 189, 0.75) !important;
+  padding: 0 !important;
+}
+
+.react-responsive-modal-overlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.react-responsive-modal-closeButton svg {
+  fill: #fff;
+}
+
+@media only screen and (min-device-pixel-ratio: 2) {
+  .modal-desc {
+    font-size: 14px;
+  }
+}

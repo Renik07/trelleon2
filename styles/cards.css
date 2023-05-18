@@ -1,0 +1,166 @@
+.my-masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: 0px; /* gutter size offset */
+  width: auto;
+  overflow: hidden;
+}
+.my-masonry-grid_column {
+  padding-left: 0px; /* gutter size */
+  background-clip: padding-box;
+  width: 33%;
+}
+
+.grid-img {
+  min-height: 140px;
+}
+
+.item-loader {
+  max-width: 100%;
+}
+
+.item {
+  position: relative;
+}
+
+.item-inner {
+  cursor: pointer;
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 1vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(140, 0, 189, 0.75), rgba(140, 0, 189, 0.75));
+  z-index: -1; /*  */
+  font-family: "Manrope", sans-serif;
+  overflow: hidden;
+}
+
+.item:hover {
+}
+
+.item:hover .item-content {
+  z-index: 1;
+}
+
+.item:hover .item-link {
+  z-index: 50;
+}
+
+.item-head {
+  display: flex;
+  gap: 17px;
+  align-items: center;
+  margin-bottom: 1.5vw;
+}
+
+.labelBook {
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 14px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #ff240c;
+  border-radius: 2px;
+  padding: 2px 14px;
+}
+
+.labelCasino {
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 14px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #850cff;
+  border-radius: 2px;
+  padding: 2px 14px;
+}
+.date {
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 14px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.author {
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 14px;
+  color: #ffffff;
+}
+.item-link {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: -1; /*  */
+}
+.item-link img {
+}
+
+.item-title,
+.modal-title {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 138%;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.item-title {
+  font-size: 1.2vw;
+  max-width: 85%;
+}
+
+.modal-desc {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.loader-comp {
+  display: block;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 1920px) {
+  .item-content {
+    padding: 20px 20px 20px;
+  }
+  .item-head {
+    margin-bottom: 28px;
+  }
+  .item-title {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .item-head {
+    margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .grid-img {
+    min-height: auto;
+  }
+}
