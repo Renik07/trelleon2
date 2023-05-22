@@ -26,7 +26,7 @@ const Card = ({ card }) => {
                     <Image src={link} alt="link" />
                 </a>
                 <div className="item-inner" onClick={() => openModal(card.id)}>
-                    <Image
+                    <LazyLoadImage
                         className="grid-img"
                         alt="img"
                         width="100%"

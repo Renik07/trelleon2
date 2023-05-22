@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import path from 'path';
 import fs from 'fs';
+import sharp from 'sharp';
 
 import Cards from '../components/Cards';
 import logo from '../public/img/logo.svg';
@@ -48,7 +49,7 @@ const Home = ({ data }) => {
                         src={logo}
                         alt="Logo Leon"
                     />
-                    <input placeholder='Поиск...' className='input' type='text' value={search} onChange={handleSearch} />
+                    <input placeholder='Поиск' className='input' type='text' value={search} onChange={handleSearch} />
                     <div className="grid">
                         <Cards data={filteredData} />
                     </div>
@@ -58,7 +59,7 @@ const Home = ({ data }) => {
     );
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const API_KEY = process.env.API_KEY;
     const API_TOKEN = process.env.API_TOKEN;
 
@@ -87,10 +88,12 @@ export async function getStaticProps() {
             }
             // конвертация полученного изображения в arrayBuffer
             const buffer = await response.arrayBuffer();
+            // Применение оптимизации и изменения размера с помощью sharp
+            const optimizedBuffer = await sharp(buffer).resize(900).jpeg({ quality: 90 }).toBuffer();
             // создание пути к файлу на сервере
             const imagePath = path.join(process.cwd(), 'public', 'trello', filename);
             // сохранение изображения на сервере
-            fs.writeFileSync(imagePath, Buffer.from(buffer));
+            fs.writeFileSync(imagePath, Buffer.from(optimizedBuffer));
 
             console.log(`Image downloaded and saved: ${imagePath}`);
         } catch (error) {
@@ -147,8 +150,7 @@ export async function getStaticProps() {
         return {
             props: {
                 data: updatedAllCards,
-            },
-            revalidate: 600,
+            }
         };
     } catch (error) {
         console.error('Ошибка при получении карточек колонки:', error);

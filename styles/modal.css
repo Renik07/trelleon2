@@ -47,7 +47,6 @@
 /* modal */
 .react-responsive-modal-modal {
   max-width: 900px !important;
-  width: 100%;
   background: rgba(139, 0, 189, 0.75) !important;
   padding: 0 !important;
 }
