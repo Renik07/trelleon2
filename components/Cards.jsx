@@ -18,7 +18,6 @@ export const Cards = ({ data }) => {
     };
 
     const displayedData = data.slice(0, page * 20);
-
     return (
         <>
             <InfiniteScroll

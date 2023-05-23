@@ -47,6 +47,7 @@
 /* modal */
 .react-responsive-modal-modal {
   max-width: 900px !important;
+  display: inline-block;
   background: rgba(139, 0, 189, 0.75) !important;
   padding: 0 !important;
 }
@@ -62,5 +63,17 @@
 @media only screen and (min-device-pixel-ratio: 2) {
   .modal-desc {
     font-size: 14px;
+  }
+}
+@media screen and (max-width: 450px) {
+  .react-responsive-modal-modal {
+    display: block !important;
+  }
+  .modal-content {
+    padding: 25px 20px;
+    font-family: "Manrope";
+  }
+  .modal-title {
+    font-size: 20px;
   }
 }

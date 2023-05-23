@@ -14,6 +14,11 @@ const idBoard = {
     bookmaker: process.env.BOOKMAKER_ID
 };
 
+const idBoard1 = {
+    casino: '61ee5f4206f17f452c248dc1',
+    bookmaker: '61ee5f5b36275a2bfcf483b0'
+};
+
 const Home = ({ data }) => {
 
     const [search, setSearch] = useState('');
@@ -21,11 +26,26 @@ const Home = ({ data }) => {
     const handleSearch = (event) => {
         setSearch(event.target.value);
     }
+
+    const [filterBoard, setFilterBoard] = useState('all');
+
+    const handlerFilterBoardChange = (event) => {
+        setFilterBoard(event.target.value);
+    };
     // 
     const filteredData = data
         // фильтрация карточек по названию
         .filter(card => {
-            return card.name.toLowerCase().includes(search.toLowerCase())
+            const nameMatches = card.name.toLowerCase().includes(search.toLowerCase());
+            if (filterBoard === 'all') {
+                return nameMatches;
+            } else if (filterBoard === 'casino') {
+                return card.idBoard === idBoard1.casino && nameMatches;
+            } else if (filterBoard === 'bookmaker') {
+                return card.idBoard === idBoard1.bookmaker && nameMatches;
+            }
+
+            return false;
         })
         // сортировка карточек по дате
         .sort((a, b) => {
@@ -49,7 +69,22 @@ const Home = ({ data }) => {
                         src={logo}
                         alt="Logo Leon"
                     />
-                    <input placeholder='Поиск' className='input' type='text' value={search} onChange={handleSearch} />
+                    <input placeholder='Поиск...' className='input' type='text' value={search} onChange={handleSearch} />
+                    <div className="radioboxes">
+                        <label>
+                            <input type="radio" value="all" checked={filterBoard === 'all'} onChange={handlerFilterBoardChange} />
+                            <span>Все</span>
+                        </label>
+                        <label>
+                            <input type="radio" value="casino" checked={filterBoard === 'casino'} onChange={handlerFilterBoardChange} />
+                            <span>Casino</span>
+                        </label>
+                        <label>
+                            <input type="radio" value="bookmaker" checked={filterBoard === 'bookmaker'} onChange={handlerFilterBoardChange} />
+                            <span>Bookmaker</span>
+                        </label>
+                    </div>
+
                     <div className="grid">
                         <Cards data={filteredData} />
                     </div>
@@ -59,7 +94,7 @@ const Home = ({ data }) => {
     );
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
     const API_KEY = process.env.API_KEY;
     const API_TOKEN = process.env.API_TOKEN;
 
@@ -150,7 +185,8 @@ export async function getServerSideProps() {
         return {
             props: {
                 data: updatedAllCards,
-            }
+            },
+            revalidate: 600
         };
     } catch (error) {
         console.error('Ошибка при получении карточек колонки:', error);

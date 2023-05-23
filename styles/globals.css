@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -14,7 +14,7 @@ body {
 
 body {
   color: #fff;
-  background: #1C1D21;
+  background: #1c1d21;
 }
 
 a {
@@ -40,7 +40,6 @@ img {
 }
 
 .content {
-
 }
 
 .input {
@@ -54,6 +53,33 @@ img {
   font-size: 16px;
 }
 
+.radioboxes {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 20px;
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+label {
+  position: relative;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+}
+
+label:hover {
+  text-decoration: underline;
+}
+
+input[type="radio"]:checked + span {
+  color: rgb(186, 250, 84);
+  text-decoration: underline;
+}
 
 @import "./cards.css";
 @import "./modal.css";
