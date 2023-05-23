@@ -77,7 +77,7 @@ label:hover {
 }
 
 input[type="radio"]:checked + span {
-  color: rgb(186, 250, 84);
+  color: rgb(250, 186, 84);
   text-decoration: underline;
 }
 

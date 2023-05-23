@@ -14,11 +14,6 @@ const idBoard = {
     bookmaker: process.env.BOOKMAKER_ID
 };
 
-const idBoard1 = {
-    casino: '61ee5f4206f17f452c248dc1',
-    bookmaker: '61ee5f5b36275a2bfcf483b0'
-};
-
 const Home = ({ data }) => {
 
     const [search, setSearch] = useState('');
@@ -37,12 +32,13 @@ const Home = ({ data }) => {
         // фильтрация карточек по названию
         .filter(card => {
             const nameMatches = card.name.toLowerCase().includes(search.toLowerCase());
+            // фильтрация по доске
             if (filterBoard === 'all') {
                 return nameMatches;
             } else if (filterBoard === 'casino') {
-                return card.idBoard === idBoard1.casino && nameMatches;
+                return card.nameBoard === 'CASINO' && nameMatches;
             } else if (filterBoard === 'bookmaker') {
-                return card.idBoard === idBoard1.bookmaker && nameMatches;
+                return card.nameBoard === 'BOOKMAKER' && nameMatches;
             }
 
             return false;
@@ -53,7 +49,6 @@ const Home = ({ data }) => {
             const dateB = new Date(b.attachments[b.attachments.length - 1].date.slice(0, 10));
             return dateB - dateA;
         });
-
     return (
         <>
             <Head>
