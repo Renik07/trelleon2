@@ -6,7 +6,7 @@ import { Modal } from "react-responsive-modal";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
-const Card = ({ card }) => {
+const Card = ({ card, imageUrl }) => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [selectedElementID, setSelectedElementID] = useState(null);
 
@@ -31,7 +31,7 @@ const Card = ({ card }) => {
                         alt="img"
                         width="100%"
                         height="auto"
-                        src={card.coverUrl}
+                        src={imageUrl}
                         effect="blur"
                     />
                     <div className="item-content">
@@ -74,7 +74,7 @@ const Card = ({ card }) => {
                             alt="modal image"
                             width="100%"
                             height="auto"
-                            src={card.coverUrl}
+                            src={imageUrl}
                             effect="blur"
                         />
                         <div className="modal-content">

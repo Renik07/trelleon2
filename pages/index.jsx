@@ -14,7 +14,7 @@ const idBoard = {
     bookmaker: process.env.BOOKMAKER_ID
 };
 
-const Home = ({ data }) => {
+const Home = ({ data, imageUrls }) => {
 
     const [search, setSearch] = useState('');
 
@@ -81,15 +81,22 @@ const Home = ({ data }) => {
                     </div>
 
                     <div className="grid">
-                        <Cards data={filteredData} />
+                        <Cards data={filteredData} imageUrls={imageUrls} />
                     </div>
                 </div>
             </main>
         </>
     );
 };
+// Получаем все пути к картинкам на сервере
+const getImageUrlsInProject = () => {
+    const imageFolder = path.join(process.cwd(), 'public', 'trello');
+    const imageFiles = fs.readdirSync(imageFolder);
+    const imageUrls = imageFiles.map((file) => `/trello/${file}`);
+    return imageUrls;
+};
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const API_KEY = process.env.API_KEY;
     const API_TOKEN = process.env.API_TOKEN;
 
@@ -177,11 +184,13 @@ export async function getStaticProps() {
                 return { ...card, coverUrl, nameBoard };
             })
         );
+
+        const imageUrls = getImageUrlsInProject();
         return {
             props: {
                 data: updatedAllCards,
+                imageUrls: imageUrls,
             },
-            revalidate: 600
         };
     } catch (error) {
         console.error('Ошибка при получении карточек колонки:', error);
