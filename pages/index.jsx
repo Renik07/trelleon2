@@ -49,6 +49,7 @@ const Home = ({ data, imageUrls }) => {
             const dateB = new Date(b.attachments[b.attachments.length - 1].date.slice(0, 10));
             return dateB - dateA;
         });
+
     return (
         <>
             <Head>
@@ -88,13 +89,6 @@ const Home = ({ data, imageUrls }) => {
         </>
     );
 };
-// Получаем все пути к картинкам на сервере
-const getImageUrlsInProject = () => {
-    const imageFolder = path.join(process.cwd(), 'public', 'trello');
-    const imageFiles = fs.readdirSync(imageFolder);
-    const imageUrls = imageFiles.map((file) => `/trello/${file}`);
-    return imageUrls;
-};
 
 export async function getServerSideProps() {
     const API_KEY = process.env.API_KEY;
@@ -105,6 +99,14 @@ export async function getServerSideProps() {
 
     const LIST_ID_DONE_BM = process.env.LIST_ID_DONE_BOOK; // bookmaker board
     const LIST_ID_ARCHIVE_BM = process.env.LIST_ID_ARCHIVE_BOOK; // bookmaker board
+
+    // Получаем все пути к картинкам на сервере
+    const getImageUrlsInProject = () => {
+        const imageFolder = path.join(process.cwd(), 'public', 'trello');
+        const imageFiles = fs.readdirSync(imageFolder);
+        const imageUrls = imageFiles.map((file) => `/trello/${file}`);
+        return imageUrls;
+    };
 
     const fetchCardsByListId = async (listId, headers) => {
         const url = `https://api.trello.com/1/lists/${listId}/cards?fields=name,desc,cover,idBoard,board,labels,shortUrl&members=true&key=${API_KEY}&token=${API_TOKEN}&attachments=true`;
