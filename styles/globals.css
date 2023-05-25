@@ -54,11 +54,19 @@ img {
 }
 
 .radioboxes {
+  text-align: center;
   margin-bottom: 15px;
   display: flex;
   gap: 20px;
   font-family: "Manrope", sans-serif;
-  font-size: 18px;
+}
+
+.radioboxes bold {
+  font-size: 16px;
+}
+
+.radioboxes span {
+  font-size: 14px;
 }
 
 input[type="radio"] {
@@ -72,13 +80,36 @@ label {
   cursor: pointer;
 }
 
+label:hover > bold,
 label:hover > span {
   text-decoration: underline;
 }
 
-input[type="radio"]:checked + span {
+input[type="radio"]:checked + bold {
   color: rgb(250, 186, 84);
   text-decoration: underline;
+}
+
+.labels {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  gap: 5px;
+}
+
+.checkboxCasino {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.labelsLeon,
+.labelsTwin {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 115px;
 }
 
 @import "./cards.css";

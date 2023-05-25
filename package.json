@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "nodemon": "nodemon --watch public/trello -e jpg,png,gif --exec 'npm run start'"
   },
   "dependencies": {
     "next": "13.2.4",
@@ -19,5 +20,8 @@
     "react-masonry-css": "^1.0.16",
     "react-responsive-modal": "^6.4.1",
     "sharp": "^0.32.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

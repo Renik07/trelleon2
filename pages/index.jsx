@@ -14,6 +14,13 @@ const idBoard = {
     bookmaker: process.env.BOOKMAKER_ID
 };
 
+const idLabels = {
+    leon: "643553227ed841c910d0923f",
+    twin: "643553186ae513e787151a58",
+    network: "61ee5f428166f38753ec04a2",
+    exclusive: "61ee5f428166f38753ec04a0",
+}
+
 const Home = ({ data, imageUrls }) => {
 
     const [search, setSearch] = useState('');
@@ -21,35 +28,94 @@ const Home = ({ data, imageUrls }) => {
     const handleSearch = (event) => {
         setSearch(event.target.value);
     }
+    // активные/не активные чекбоксы Casino
+    const [isDisabledLabelCasino, setIsDisabledLabelCasino] = useState(true);
 
-    const [filterBoard, setFilterBoard] = useState('all');
+    const [filterBoard, setFilterBoard] = useState({
+        board: 'all',
+        labels: {
+            leon: false,
+            twin: false,
+            leonNetwork: false,
+            leonGrocery: false,
+            twinNetwork: false,
+            twinGrocery: false
+        }
+    });
 
-    const handlerFilterBoardChange = (event) => {
-        setFilterBoard(event.target.value);
+    const handleFilterChange = (event) => {
+        if (event.target.name === 'board') {
+            setFilterBoard({
+                ...filterBoard,
+                board: event.target.value,
+                labels: {
+                    leon: false,
+                    twin: false,
+                    leonNetwork: false,
+                    leonGrocery: false,
+                    twinNetwork: false,
+                    twinGrocery: false
+                }
+            });
+            if (event.target.value === 'all' || event.target.value === 'bookmaker') {
+                setIsDisabledLabelCasino(true);
+            } else {
+                setIsDisabledLabelCasino(false);
+            }
+        } else {
+            setFilterBoard({
+                ...filterBoard,
+                labels: {
+                    ...filterBoard.labels,
+                    [event.target.name]: event.target.checked
+                },
+            });
+        }
     };
     // 
     const filteredData = data
         // фильтрация карточек по названию
-        .filter(card => {
+        .filter((card) => {
             const nameMatches = card.name.toLowerCase().includes(search.toLowerCase());
             // фильтрация по доске
-            if (filterBoard === 'all') {
+            if (filterBoard.board === "all") {
                 return nameMatches;
-            } else if (filterBoard === 'casino') {
-                return card.nameBoard === 'CASINO' && nameMatches;
-            } else if (filterBoard === 'bookmaker') {
-                return card.nameBoard === 'BOOKMAKER' && nameMatches;
+            } else if (filterBoard.board === "casino") {
+                const hasLeonLabel = card.labels.some((label) => label.id === idLabels.leon); // ALL LEON
+                const hasTwinLabel = card.labels.some((label) => label.id === idLabels.twin); // ALL TWIN
+                // Leon сетевые
+                const hasLeonLabelNetwork = card.labels.some((label) => label.id === idLabels.leon && (label.id === idLabels.network || label.id === idLabels.exclusive));
+                // Leon продуктовые
+                const hasLeonLabelGrocery = card.labels.some((label) => label.id === idLabels.leon && (label.id !== idLabels.network && label.id !== idLabels.exclusive));
+                // Twin сетевые
+                const hasTwinLabelNetwork = card.labels.some((label) => label.id === idLabels.twin && (label.id === idLabels.network || label.id === idLabels.exclusive));
+                // Twin продуктовые
+                const hasTwinLabelGrocery = card.labels.some((label) => label.id === idLabels.twin && (label.id !== idLabels.network && label.id !== idLabels.exclusive));
+
+                const hasSelectedLabels = filterBoard.labels.leon && filterBoard.labels.twin;
+                if (hasSelectedLabels) {
+                    return nameMatches && (hasLeonLabel || hasTwinLabel);
+                } else if (filterBoard.labels.leon) {
+                    return nameMatches && hasLeonLabel;
+                } else if (filterBoard.labels.twin) {
+                    return nameMatches && hasTwinLabel;
+                } else {
+                    return card.nameBoard === "CASINO" && nameMatches;
+                }
+            } else if (filterBoard.board === "bookmaker") {
+                return card.nameBoard === "BOOKMAKER" && nameMatches;
             }
 
             return false;
-        })
-        // сортировка карточек по дате
-        .sort((a, b) => {
-            const dateA = new Date(a.attachments[a.attachments.length - 1].date.slice(0, 10));
-            const dateB = new Date(b.attachments[b.attachments.length - 1].date.slice(0, 10));
-            return dateB - dateA;
         });
 
+    // сортировка карточек по дате
+    filteredData.sort((a, b) => {
+        const dateA = new Date(a.attachments[a.attachments.length - 1].date.slice(0, 10));
+        const dateB = new Date(b.attachments[b.attachments.length - 1].date.slice(0, 10));
+        return dateB - dateA;
+    });
+    // console.log(filteredData);
     return (
         <>
             <Head>
@@ -68,16 +134,46 @@ const Home = ({ data, imageUrls }) => {
                     <input placeholder='Поиск...' className='input' type='text' value={search} onChange={handleSearch} />
                     <div className="radioboxes">
                         <label>
-                            <input type="radio" value="all" checked={filterBoard === 'all'} onChange={handlerFilterBoardChange} />
-                            <span>Все</span>
+                            <input type="radio" name="board" value="all" checked={filterBoard.board === 'all'} onChange={handleFilterChange} />
+                            <bold>Все</bold>
                         </label>
                         <label>
-                            <input type="radio" value="casino" checked={filterBoard === 'casino'} onChange={handlerFilterBoardChange} />
-                            <span>Casino</span>
+                            <input type="radio" name="board" value="casino" checked={filterBoard.board === 'casino'} onChange={handleFilterChange} />
+                            <bold>Casino</bold>
+                            <div className="labels">
+                                <label className="checkboxCasino">
+                                    <input type="checkbox" disabled={isDisabledLabelCasino} name="leon" checked={filterBoard.labels.leon} onChange={handleFilterChange} />
+                                    <span>Leon</span>
+                                    {/*                                     <div className="labelsLeon">
+                                        <label>
+                                            <input type="checkbox" disabled={isDisabledLabelCasino} name="leonNetwork" checked={filterBoard.labels.leonNetwork} onChange={handleFilterChange} />
+                                            <span>Сетевые</span>
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" disabled={isDisabledLabelCasino} name="leonGrocery" checked={filterBoard.labels.leonGrocery} onChange={handleFilterChange} />
+                                            <span>Продуктовые</span>
+                                        </label>
+                                    </div> */}
+                                </label>
+                                <label className="checkboxCasino">
+                                    <input type="checkbox" disabled={isDisabledLabelCasino} name="twin" checked={filterBoard.labels.twin} onChange={handleFilterChange} />
+                                    <span>Twin</span>
+                                    {/*                                     <div className="labelsTwin">
+                                        <label>
+                                            <input type="checkbox" disabled={isDisabledLabelCasino} name="twinNetwork" checked={filterBoard.labels.twinNetwork} onChange={handleFilterChange} />
+                                            <span>Сетевые</span>
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" disabled={isDisabledLabelCasino} name="twinGrocery" checked={filterBoard.labels.twinGrocery} onChange={handleFilterChange} />
+                                            <span>Продуктовые</span>
+                                        </label>
+                                    </div> */}
+                                </label>
+                            </div>
                         </label>
                         <label>
-                            <input type="radio" value="bookmaker" checked={filterBoard === 'bookmaker'} onChange={handlerFilterBoardChange} />
-                            <span>Bookmaker</span>
+                            <input type="radio" name="board" value="bookmaker" checked={filterBoard.board === 'bookmaker'} onChange={handleFilterChange} />
+                            <bold>Bookmaker</bold>
                         </label>
                     </div>
 
