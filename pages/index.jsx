@@ -8,6 +8,7 @@ import sharp from 'sharp';
 
 import Cards from '../components/Cards';
 import logo from '../public/img/logo.svg';
+import Filters from '@/components/Filters';
 
 const idBoard = {
     casino: process.env.BOARD_ID,
@@ -107,46 +108,38 @@ const Home = ({ data, imageUrls }) => {
             }));
         }
     };
-    // 
-
+    // Фильтры
     const filteredData = data.filter((card) => {
         const nameMatches = card.name.toLowerCase().includes(search.toLowerCase());
         const hasLeonLabel = card.labels.some((label) => label.id === idLabels.leon);
         const hasTwinLabel = card.labels.some((label) => label.id === idLabels.twin);
-        const hasNetworkLabel = card.labels.some((label) => label.id === idLabels.network || label.id === idLabels.exclusive);
-        const hasGroceryLabel = !card.labels.some((label) => label.id === idLabels.network || label.id === idLabels.exclusive);
+        const hasNetworkLabel = card.labels.some((label) => label.id === idLabels.network);
+        const hasExclusiveLabel = card.labels.some((label) => label.id === idLabels.exclusive);
 
-        const hasSelectedLabels = filterBoard.labels.leon && filterBoard.labels.twin;
+        const isLeonSelected = filterBoard.labels.leon;
+        const isLeonNetworkSelected = filterBoard.labels.leonNetwork;
+        const isLeonGrocerySelected = filterBoard.labels.leonGrocery;
+        
+        const isTwinSelected = filterBoard.labels.twin;
+        const isTwinNetworkSelected = filterBoard.labels.twinNetwork;
+        const isTwinGrocerySelected = filterBoard.labels.twinGrocery;
 
-        if (filterBoard.board === "all") {
-            return nameMatches;
-        } else if (filterBoard.board === "casino") {
-            if (hasSelectedLabels) {
-                return nameMatches && (hasLeonLabel || hasTwinLabel) && (hasNetworkLabel || hasGroceryLabel);
-            } else if (filterBoard.labels.leon) {
-                if (filterBoard.labels.leonNetwork) {
-                    return nameMatches && hasLeonLabel && hasNetworkLabel;
-                }
-                if (filterBoard.labels.leonGrocery) {
-                    return nameMatches && hasLeonLabel && hasGroceryLabel;
-                }
-                return nameMatches && hasLeonLabel;
-            } else if (filterBoard.labels.twin) {
-                if (filterBoard.labels.twinNetwork) {
-                    return nameMatches && hasTwinLabel && hasNetworkLabel;
-                }
-                if (filterBoard.labels.twinGrocery) {
-                    return nameMatches && hasTwinLabel && hasGroceryLabel;
-                }
-                return nameMatches && hasTwinLabel;
-            } else {
-                return card.nameBoard === "CASINO" && nameMatches;
-            }
-        } else if (filterBoard.board === "bookmaker") {
-            return card.nameBoard === "BOOKMAKER" && nameMatches;
-        }
-
-        return false;
+        return (
+            (filterBoard.board === "all" && nameMatches) ||
+            (filterBoard.board === "casino" &&
+                card.nameBoard === "CASINO" &&
+                (
+                    (isLeonSelected && !isLeonNetworkSelected && !isLeonGrocerySelected && (hasLeonLabel || (isTwinSelected && hasTwinLabel)) && nameMatches) ||
+                    (isLeonSelected && isLeonNetworkSelected && (hasLeonLabel || (isTwinSelected && hasTwinLabel)) && (hasNetworkLabel || hasExclusiveLabel) && nameMatches) ||
+                    (isLeonSelected && isLeonGrocerySelected && (hasLeonLabel || (isTwinSelected && hasTwinLabel)) && !hasNetworkLabel && !hasExclusiveLabel && nameMatches) ||
+                    (isTwinSelected && !isTwinNetworkSelected && !isTwinGrocerySelected && hasTwinLabel && nameMatches) ||
+                    (isTwinSelected && isTwinNetworkSelected && hasTwinLabel && (hasNetworkLabel || hasExclusiveLabel) && nameMatches) ||
+                    (isTwinSelected && isTwinGrocerySelected && hasTwinLabel && !hasNetworkLabel && !hasExclusiveLabel && nameMatches) ||
+                    (!isLeonSelected && !isTwinSelected && nameMatches)
+                )
+            ) ||
+            (filterBoard.board === "bookmaker" && card.nameBoard === "BOOKMAKER" && nameMatches)
+        );
     });
 
     // сортировка карточек по дате
@@ -171,59 +164,13 @@ const Home = ({ data, imageUrls }) => {
                         alt="Logo Leon"
                     />
                     <input placeholder='Поиск...' className='input' type='text' value={search} onChange={handleSearch} />
-                    <div className="filters">
-                        <h3 className="filterTitle" onClick={handleToggleFilters}>
-                            Фильтры
-                            <span>{isToggleFilters ? " \u2191" : " \u2193"}</span>
-                        </h3>
-                        {isToggleFilters && (
-                            <div className={`radioboxes ${isToggleFilters ? 'showFilters' : ''}`}>
-                                <label>
-                                    <input type="radio" name="board" value="all" checked={filterBoard.board === 'all'} onChange={handleFilterChange} />
-                                    <bold>Все</bold>
-                                </label>
-                                <label>
-                                    <input type="radio" name="board" value="casino" checked={filterBoard.board === 'casino'} onChange={handleFilterChange} />
-                                    <bold>Casino</bold>
-                                    <div className="labels">
-                                        <label className="checkboxCasino">
-                                            <input type="checkbox" disabled={isDisabledLabelCasino} name="leon" checked={filterBoard.labels.leon} onChange={handleFilterChange} />
-                                            <span>Leon</span>
-                                            <div className="labelsLeon">
-                                                <label className="checkbox">
-                                                    <input type="checkbox" disabled={!filterBoard.labels.leon} name="leonNetwork" checked={filterBoard.labels.leonNetwork} onChange={handleFilterChange} />
-                                                    <span>Сетевые</span>
-                                                </label>
-                                                <label className="checkbox">
-                                                    <input type="checkbox" disabled={!filterBoard.labels.leon} name="leonGrocery" checked={filterBoard.labels.leonGrocery} onChange={handleFilterChange} />
-                                                    <span>Продуктовые</span>
-                                                </label>
-                                            </div>
-                                        </label>
-                                        <label className="checkboxCasino">
-                                            <input type="checkbox" disabled={isDisabledLabelCasino} name="twin" checked={filterBoard.labels.twin} onChange={handleFilterChange} />
-                                            <span>Twin</span>
-                                            <div className="labelsTwin">
-                                                <label className="checkbox">
-                                                    <input type="checkbox" disabled={!filterBoard.labels.twin} name="twinNetwork" checked={filterBoard.labels.twinNetwork} onChange={handleFilterChange} />
-                                                    <span>Сетевые</span>
-                                                </label>
-                                                <label className="checkbox">
-                                                    <input type="checkbox" disabled={!filterBoard.labels.twin} name="twinGrocery" checked={filterBoard.labels.twinGrocery} onChange={handleFilterChange} />
-                                                    <span>Продуктовые</span>
-                                                </label>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </label>
-                                <label>
-                                    <input type="radio" name="board" value="bookmaker" checked={filterBoard.board === 'bookmaker'} onChange={handleFilterChange} />
-                                    <bold>Bookmaker</bold>
-                                </label>
-                            </div>
-                        )}
-                    </div>
-
+                    <Filters 
+                        isToggleFilters={isToggleFilters}
+                        handleToggleFilters={handleToggleFilters}
+                        isDisabledLabelCasino={isDisabledLabelCasino}
+                        handleFilterChange={handleFilterChange}
+                        filterBoard={filterBoard}
+                    />
                     <div className="grid">
                         <Cards data={filteredData} imageUrls={imageUrls} />
                     </div>
