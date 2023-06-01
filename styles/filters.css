@@ -23,7 +23,7 @@
     animation: fadeInOut 0.3s ease-in-out;
 }
 
-.radioboxes bold {
+.radioboxes b {
     font-size: 16px;
 }
 
@@ -42,16 +42,16 @@ label {
     cursor: pointer;
 }
 
-label:hover > bold,
+label:hover > b,
 label:hover > span {
     text-decoration: underline;
 }
 
-input[type="radio"] + bold {
+input[type="radio"] + b {
     display: inline-block;
     margin-bottom: 5px;
 }
-input[type="radio"]:checked + bold {
+input[type="radio"]:checked + b {
     color: rgb(250, 186, 84);
     text-decoration: underline;
     margin-bottom: 5px;

@@ -9,11 +9,11 @@ const Filters = ({isToggleFilters, handleToggleFilters, isDisabledLabelCasino, h
             <div className={`radioboxes ${isToggleFilters ? 'showFilters' : ''}`}>
                 <label>
                     <input type="radio" name="board" value="all" checked={filterBoard.board === 'all'} onChange={handleFilterChange} />
-                    <bold>Все</bold>
+                    <b>Все</b>
                 </label>
                 <label>
                     <input type="radio" name="board" value="casino" checked={filterBoard.board === 'casino'} onChange={handleFilterChange} />
-                    <bold>Casino</bold>
+                    <b>Casino</b>
                     <div className="labels">
                         <label className="checkboxCasino">
                             <input type="checkbox" disabled={isDisabledLabelCasino} name="leon" checked={filterBoard.labels.leon} onChange={handleFilterChange} />
@@ -47,7 +47,7 @@ const Filters = ({isToggleFilters, handleToggleFilters, isDisabledLabelCasino, h
                 </label>
                 <label>
                     <input type="radio" name="board" value="bookmaker" checked={filterBoard.board === 'bookmaker'} onChange={handleFilterChange} />
-                    <bold>Bookmaker</bold>
+                    <b>Bookmaker</b>
                 </label>
             </div>
         )}
